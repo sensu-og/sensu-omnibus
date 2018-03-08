@@ -166,14 +166,15 @@ else
     live_stream true
   end
 
-  execute 'clone sensu-omnibus' do
-    command 'git clone -vvv https://github.com/sensu/sensu-omnibus.git'
+  execute 'show omnibus-toolchain bin dir' do
+    command 'ls /opt/omnibus-toolchain/bin'
     live_stream true
   end
 
   git project_dir do
     repository 'https://github.com/sensu/sensu-omnibus.git'
     revision rev
+    environment ({"PATH" => '/opt/omnibus-toolchain/bin:/opt/omnibus-toolchain/embedded/bin:/usr/local/bin:$PATH'}) unless windows?
     user node["omnibus"]["build_user"] unless windows?
     group node["omnibus"]["build_user_group"] unless windows?
     action :sync
