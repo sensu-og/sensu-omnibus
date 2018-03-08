@@ -169,6 +169,8 @@ suites:
     - build-essential::default
     - omnibus_sensu::default
     attributes:
+      omnibus:
+        toolchain_version: 1.1.82
       omnibus_sensu:
         project_revision: "<%= ENV['PROJECT_REVISION'] %>"
         build_version: "<%= build_version %>"
