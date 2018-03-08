@@ -52,6 +52,14 @@ else
   end
 end
 
+case node["platform_family"]
+when "rhel"
+  execute 'installed packages' do
+    command 'rpm -qa'
+    live_stream true
+  end
+end
+
 include_recipe "omnibus::default"
 
 case node["platform_family"]
@@ -140,6 +148,16 @@ when 'archive'
     end
   end
 else
+  execute 'show PATH' do
+    command 'echo $PATH'
+    live_stream true
+  end
+
+  execute 'show git version' do
+    command 'git --version'
+    live_stream true
+  end
+
   git project_dir do
     repository 'https://github.com/sensu/sensu-omnibus.git'
     revision rev
