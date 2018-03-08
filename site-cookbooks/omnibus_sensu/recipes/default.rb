@@ -156,8 +156,8 @@ when 'archive'
     end
   end
 else
-  execute 'show PATH' do
-    command 'echo $PATH'
+  execute 'which git' do
+    command 'which git'
     live_stream true
   end
 
