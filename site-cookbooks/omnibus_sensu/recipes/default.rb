@@ -39,6 +39,14 @@ end
 if freebsd?
   package "git"
 else
+  case node["platform_family"]
+  when "rhel"
+    execute "update libcurl" do
+      command 'yum -y install libcurl openssl'
+      live_stream true
+    end
+  end
+
   include_recipe "git"
 
   git_config "user.email" do
@@ -155,6 +163,11 @@ else
 
   execute 'show git version' do
     command 'git --version'
+    live_stream true
+  end
+
+  execute 'clone sensu-omnibus' do
+    command 'git clone -vvv https://github.com/sensu/sensu-omnibus.git'
     live_stream true
   end
 
