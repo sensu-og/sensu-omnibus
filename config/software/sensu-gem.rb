@@ -60,16 +60,16 @@ build do
 
   # make directories
   mkdir("#{install_dir}/bin")
-  mkdir("#{etc_dir}/sensu")
-  mkdir("#{etc_dir}/sensu/conf.d")
-  mkdir("#{etc_dir}/sensu/extensions")
-  mkdir("#{etc_dir}/sensu/plugins")
-  mkdir("/var/log/sensu")
-  mkdir("/var/run/sensu")
-  mkdir("/var/cache/sensu")
-  mkdir("#{etc_dir}/logrotate.d")
+  mkdir("#{install_dir}/etc/sensu/conf.d")
+  mkdir("#{install_dir}/etc/sensu/extensions")
+  mkdir("#{install_dir}/etc/sensu/plugins")
+  mkdir("#{install_dir}/etc/tmpfiles.d")
+  mkdir("#{install_dir}/var/log/sensu")
+  mkdir("#{install_dir}/var/run/sensu")
+  mkdir("#{install_dir}/var/cache/sensu")
+  mkdir("#{install_dir}/etc/logrotate.d")
   mkdir("/lib/svc/manifest/site") if solaris?
-  mkdir("#{etc_dir}/default") unless rhel? || debian? # if directory doesn't exist would be better
+  mkdir("#{install_dir}/etc/default") unless rhel? #  if directory doesn't exist would be better
 
   # until we can figure out how to control files outside of install_dir on
   # windows, let's create a conf.d directory in c:/opt/sensu for configuration
@@ -80,52 +80,37 @@ build do
   # The packager for FreeBSD does not support adding empty directories to the
   # package manifest. To work around this limitation we add .sensu-keep files
   # in each empty directory.
-  if freebsd?
-    touch("#{etc_dir}/sensu/conf.d/.sensu-keep")
-    touch("#{etc_dir}/sensu/extensions/.sensu-keep")
-    touch("#{etc_dir}/sensu/plugins/.sensu-keep")
-    touch("/var/log/sensu/.sensu-keep")
-    touch("/var/run/sensu/.sensu-keep")
-    touch("/var/cache/sensu/.sensu-keep")
-    project.extra_package_file("#{etc_dir}/sensu/conf.d/.sensu-keep")
-    project.extra_package_file("#{etc_dir}/sensu/extensions/.sensu-keep")
-    project.extra_package_file("#{etc_dir}/sensu/plugins/.sensu-keep")
-    project.extra_package_file("/var/log/sensu/.sensu-keep")
-    project.extra_package_file("/var/run/sensu/.sensu-keep")
-    project.extra_package_file("/var/cache/sensu/.sensu-keep")
-  else
-    project.extra_package_file("#{etc_dir}/sensu/conf.d")
-    project.extra_package_file("#{etc_dir}/sensu/extensions")
-    project.extra_package_file("#{etc_dir}/sensu/plugins")
-    project.extra_package_file("/var/log/sensu")
-    project.extra_package_file("/var/run/sensu")
-    project.extra_package_file("/var/cache/sensu")
-  end
+  touch("#{install_dir}/etc/sensu/conf.d/.sensu-keep")
+  touch("#{install_dir}/etc/sensu/extensions/.sensu-keep")
+  touch("#{install_dir}/etc/sensu/plugins/.sensu-keep")
+  touch("#{install_dir}/var/log/sensu/.sensu-keep")
+  touch("#{install_dir}/var/run/sensu/.sensu-keep")
+  touch("#{install_dir}/var/cache/sensu/.sensu-keep")
 
   # sensu-install (in omnibus bin dir)
   if windows?
     copy("#{files_dir}/sensu-install.bat", "#{bin_dir}/sensu-install")
   else
     copy("#{files_dir}/bin/sensu-install", bin_dir)
-    copy("#{files_dir}/bin/sensu-install", "#{usr_bin_dir}/sensu-install")
+    #copy("#{files_dir}/bin/sensu-install", "#{usr_bin_dir}/sensu-install")
     command("chmod +x #{bin_dir}/sensu-install")
-    command("chmod +x #{usr_bin_dir}/sensu-install")
+    #command("chmod +x #{usr_bin_dir}/sensu-install")
   end
 
   # misc files
-  copy("#{files_dir}/default/sensu", "#{etc_dir}/default/sensu")
-  copy("#{files_dir}/logrotate.d/sensu", "#{etc_dir}/logrotate.d/sensu")
+  copy("#{files_dir}/default/sensu", "#{install_dir}/etc/default/sensu")
+  copy("#{files_dir}/logrotate.d/sensu", "#{install_dir}/etc/logrotate.d/sensu")
 
   # add config & extra package files (files outside of /opt/sensu)
   if linux?
     # only deb and rpm packagers honor config_file directives
-    project.config_file("#{etc_dir}/default/sensu")
-    project.config_file("#{etc_dir}/logrotate.d/sensu")
+    project.config_file("#{install_dir}/etc/default/sensu")
+    project.config_file("#{install_dir}/etc/logrotate.d/sensu")
   end
 
-  project.extra_package_file("#{etc_dir}/default/sensu")
-  project.extra_package_file("#{etc_dir}/logrotate.d/sensu")
-  project.extra_package_file("#{usr_bin_dir}/sensu-install")
+  project.extra_package_file("#{install_dir}/etc/default/sensu")
+  project.extra_package_file("#{install_dir}/etc/logrotate.d/sensu")
+  project.extra_package_file("#{install_dir}/bin/sensu-install")
 
   # sensu-service
   copy("#{files_dir}/bin/sensu-service", bin_dir)
@@ -144,11 +129,11 @@ build do
   if service_manager == :systemd
     options = {
       source: "tmpfilesd/sensu.conf.erb",
-      dest: "#{etc_dir}/tmpfiles.d/sensu.conf",
+      dest: "#{install_dir}/etc/tmpfiles.d/sensu.conf",
       mode: 0644
     }
     erb(options)
-    project.extra_package_file("#{etc_dir}/tmpfiles.d/sensu.conf")
+    project.extra_package_file("#{install_dir}/etc/tmpfiles.d/sensu.conf")
   end
 
   # service wrappers
@@ -157,7 +142,7 @@ build do
   # render the sensu service templates to their destination
   Helpers::services(service_manager).each do |sensu_service|
     filename = Helpers::filename_for_service(service_manager, sensu_service)
-    destination = File.join(service_dir, filename)
+    destination = File.join(install_dir, 'etc', filename)
     options = {
       source: "#{service_manager}/sensu-service.erb",
       dest: destination,

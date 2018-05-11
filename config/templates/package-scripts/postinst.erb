@@ -31,9 +31,12 @@ INSTALLER_DIR=/opt/sensu
 EMBEDDED_DIR=$INSTALLER_DIR/embedded
 EMBEDDED_BIN_DIR=$EMBEDDED_DIR/bin
 SHARE_DIR=$EMBEDDED_DIR/share
-LOG_DIR=/var/log/sensu
-PID_DIR=/var/run/sensu
-TMP_DIR=/var/cache/sensu
+VAR_LOG=/var/log
+LOG_DIR=$VAR_LOG/sensu
+VAR_RUN=/var/run
+PID_DIR=$VAR_RUN/sensu
+VAR_CACHE=/var/cache
+TMP_DIR=$VAR_CACHE/sensu
 CONFIG_DIR=$ETC_DIR/sensu
 CONFD_DIR=$CONFIG_DIR/conf.d
 PLUGINS_DIR=$CONFIG_DIR/plugins
@@ -150,16 +153,40 @@ create_sensu_user_group()
     fi
 }
 
+create_sensu_dirs() {
+    set -e
+    mkdir -p $ETC_DIR
+    mkdir -p $VAR_LOG
+    mkdir -p $VAR_RUN
+    mkdir -p $VAR_CACHE
+    mkdir -p $ETC_DIR/logrotate.d
+    mkdir -p $ETC_DIR/tmpfiles.d
+    }
+
+link_sensu_dirs() {
+    set -e
+    #link /etc/sensu to /opt/sensu/etc
+    ln -sT $INSTALLER_DIR/$CONFIG_DIR $CONFIG_DIR
+    ln -sT $INSTALLER_DIR/$LOG_DIR $LOG_DIR
+    ln -sT $INSTALLER_DIR/$PID_DIR $PID_DIR
+    ln -sT $INSTALLER_DIR/$TMP_DIR $TMP_DIR
+    ln -sT $INSTALLER_DIR/etc/logrotate.d/sensu /etc/logrotate.d/sensu
+    ln -sT $INSTALLER_DIR/etc/tmpfiles.d/sensu.conf /etc/tmpfiles.d/sensu.conf
+}
+
 chown_sensu_dirs()
 {
     set -e
+    create_sensu_dirs
+    link_sensu_dirs
     # Ensure all files/directories in $INSTALLER_DIR are owned by root.
     chown -Rh 0:0 $INSTALLER_DIR
-    chown -R $SENSU_USER:$SENSU_GROUP $CONFIG_DIR
-    chown -R $SENSU_USER:$SENSU_GROUP $LOG_DIR
-    chown -R $SENSU_USER:$SENSU_GROUP $PID_DIR
-    chown -R $SENSU_USER:$SENSU_GROUP $TMP_DIR
+    chown -RL $SENSU_USER:$SENSU_GROUP $CONFIG_DIR
+    chown -RL $SENSU_USER:$SENSU_GROUP $LOG_DIR
+    chown -RL $SENSU_USER:$SENSU_GROUP $PID_DIR
+    chown -RL $SENSU_USER:$SENSU_GROUP $TMP_DIR
 }
+
 
 create_system_services()
 {
