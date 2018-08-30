@@ -38,6 +38,14 @@ end
 
 if freebsd?
   package "git"
+
+  execute "git user email" do
+    command 'git config --global user.email "justin@sensu.io"'
+  end
+
+  execute "git user name" do
+    command 'git config --global user.name "Justin Kolberg"'
+  end
 else
   include_recipe "git"
 
@@ -181,8 +189,9 @@ load_toolchain_cmd = case windows?
                        ".  #{::File.join(build_user_home, 'load-omnibus-toolchain.sh')}"
                      end
 
-execute "populate_omnibus_cache_s3" do
-  command(
+if node["omnibus_sensu"]["caching_enabled"]
+  execute "populate_omnibus_cache_s3" do
+    command(
     <<-CODE.gsub(/^ {10}/, '')
           #{load_toolchain_cmd} && \
           bundle install && \
@@ -191,10 +200,11 @@ execute "populate_omnibus_cache_s3" do
           bundle exec omnibus cache missing
        CODE
     )
-  cwd node["omnibus_sensu"]["project_dir"]
-  user "root" unless windows?
-  environment shared_env
-  not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
+    cwd node["omnibus_sensu"]["project_dir"]
+    user "root" unless windows?
+    environment shared_env
+    not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
+  end
 end
 
 debian_9_or_greater = node["platform"] == "debian" && Gem::Version.new(node["platform_version"]) >= Gem::Version.new(9)

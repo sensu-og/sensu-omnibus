@@ -5,3 +5,4 @@ default["omnibus_sensu"]["publishers"] = {
   "s3" => {}
 }
 default["omnibus_sensu"]["windows_target_version"] = "2012r2"
+default["omnibus_sensu"]["caching_enabled"] = true

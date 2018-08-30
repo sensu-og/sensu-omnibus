@@ -91,7 +91,7 @@ create_sensu_user_group()
     <% case platform_family
     when "mac_os_x" -%>
     dscl . -list /Groups | grep "^_sensu" > /dev/null
-    <% when "linux" -%>
+    <% when "debian", "rhel" -%>
     getent group sensu > /dev/null
     <% else -%>
     grep "^sensu:" /etc/group > /dev/null
@@ -122,7 +122,7 @@ create_sensu_user_group()
     <% case platform_family
     when "mac_os_x" -%>
     dscl . -list /Users | grep "^_sensu" > /dev/null
-    <% when "linux" -%>
+    <% when "debian", "rhel" -%>
     getent passwd sensu > /dev/null
     <% else -%>
     grep "^sensu:" /etc/passwd > /dev/null
