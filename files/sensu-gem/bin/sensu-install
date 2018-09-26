@@ -47,8 +47,10 @@ if [ -f $ETC_DIR/default/sensu-install ]; then
 fi
 
 if [ $EMBEDDED_RUBY = "true" ]; then
-    export PATH=/opt/sensu/embedded/bin:$PATH
-    export GEM_PATH=/opt/sensu/embedded/lib/ruby/gems/2.4.0:$GEM_PATH
+    PATH=/opt/sensu/embedded/bin:$PATH
+    GEM_PATH=/opt/sensu/embedded/lib/ruby/gems/2.4.0:$GEM_PATH
+    export PATH
+    export GEM_PATH
 fi
 
 /opt/sensu/embedded/bin/sensu-install $@
