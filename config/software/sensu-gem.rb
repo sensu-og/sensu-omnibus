@@ -26,7 +26,7 @@ build do
   gem_install_extras = ""
 
   if solaris_10?
-    gem_install_extras << " --with-cflags=\"-fms-extensions\""
+    gem_install_extras << " --with-cflags=\"-std=gnu99 -fms-extensions\""
   end
 
   gem "install sensu" \
