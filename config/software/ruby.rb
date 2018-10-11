@@ -110,7 +110,7 @@ elsif aix?
 elsif solaris_10?
   if sparc?
     # Known issue with rubby where too much GCC optimization blows up miniruby on sparc
-    env["CFLAGS"] << " -std=c99 -O3 -g -pipe -mcpu=v9 -fms-extensions"
+    env["CFLAGS"] << " -std=c99 -g -pipe -mcpu=v9 -fms-extensions"
     env["LDFLAGS"] << " -mcpu=v9"
   else
     env["CFLAGS"] << " -std=c99 -O3 -g -pipe -fms-extensions"
@@ -136,6 +136,10 @@ build do
 
   if solaris_10? && version.satisfies?(">= 2.1")
     patch source: "ruby-no-stack-protector.patch", plevel: 1, env: patch_env
+    if version.satisfies?("= 2.4.4") && sparc?
+      patch source: "ruby-remove-headc.patch", plevel: 1, env: patch_env
+      patch source: "ruby-no-m32-cflag.patch", plevel: 1, env: patch_env
+    end
   elsif solaris_11? && version =~ /^2.1/
     patch source: "ruby-solaris-linux-socket-compat.patch", plevel: 1, env: patch_env
   end
