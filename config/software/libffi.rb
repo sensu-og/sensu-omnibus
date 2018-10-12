@@ -52,6 +52,10 @@ build do
   configure(*configure_command, env: env)
 
   if solaris_10?
+    if version == "3.2.1" && sparc?
+      patch source: "libffi-3.2.1-makefiles-sparc.patch", plevel: 1, env: env
+    end
+
     # run old make :(
     make env: env, bin: "/usr/ccs/bin/make"
     make "install", env: env, bin: "/usr/ccs/bin/make"
