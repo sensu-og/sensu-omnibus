@@ -38,6 +38,14 @@ end
 
 if freebsd?
   package "git"
+
+  execute "git user email" do
+    command 'git config --global user.email "justin@sensu.io"'
+  end
+
+  execute "git user name" do
+    command 'git config --global user.name "Justin Kolberg"'
+  end
 else
   include_recipe "git"
 
