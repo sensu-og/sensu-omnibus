@@ -155,6 +155,7 @@ platforms:
     driver:
       image_id: ami-6f64f00f
       instance_type: c5d.xlarge
+      subnet_id: subnet-03704c5b3ef73a96a
     transport:
       name: winrm
       elevated: true
@@ -163,6 +164,7 @@ platforms:
     driver:
       image_id: ami-6f64f00f
       instance_type: c5d.xlarge
+      subnet_id: subnet-03704c5b3ef73a96a
     transport:
       name: winrm
       elevated: true
