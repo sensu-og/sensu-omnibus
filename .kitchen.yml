@@ -73,7 +73,7 @@ platforms:
   - name: centos-6-i386
     driver:
       image_id: ami-4fbf2f7f
-      instance_type: m1.medium
+      instance_type: c1.medium
       block_device_mappings:
         - device_name: /dev/sda
           ebs:
@@ -86,7 +86,7 @@ platforms:
   - name: centos-5-i386
     driver:
       image_id: ami-e68b1d86
-      instance_type: m1.medium
+      instance_type: c1.medium
     run_list: yum-epel::default
   - name: debian-9
     run_list: apt::default
@@ -113,7 +113,7 @@ platforms:
             delete_on_termination: true
   - name: debian-7-i386
     driver:
-      instance_type: m1.medium
+      instance_type: c1.medium
       block_device_mappings:
         - device_name: /dev/sda
           ebs:
@@ -137,24 +137,24 @@ platforms:
     run_list: apt::default
   - name: ubuntu-16.04-i386
     driver:
-      instance_type: m1.medium
+      instance_type: c1.medium
     run_list: apt::default
   - name: ubuntu-14.04
     run_list: apt::default
   - name: ubuntu-14.04-i386
     driver:
-      instance_type: m1.medium
+      instance_type: c1.medium
     run_list: apt::default
   - name: ubuntu-12.04
     run_list: apt::default
   - name: ubuntu-12.04-i386
     driver:
-      instance_type: m1.medium
+      instance_type: c1.medium
     run_list: apt::default
   - name: windows-2012-r2
     driver:
       image_id: ami-6f64f00f
-      instance_type: m3.xlarge
+      instance_type: c5d.xlarge
     transport:
       name: winrm
       elevated: true
@@ -162,7 +162,7 @@ platforms:
   - name: windows-2012-r2-i386
     driver:
       image_id: ami-6f64f00f
-      instance_type: m3.xlarge
+      instance_type: c5d.xlarge
     transport:
       name: winrm
       elevated: true
