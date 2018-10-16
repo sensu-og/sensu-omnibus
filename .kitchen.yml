@@ -154,7 +154,7 @@ platforms:
   - name: windows-2012-r2
     driver:
       image_id: ami-6f64f00f
-      instance_type: c5d.xlarge
+      instance_type: m5.2xlarge
       subnet_id: subnet-03704c5b3ef73a96a
     transport:
       name: winrm
@@ -163,7 +163,7 @@ platforms:
   - name: windows-2012-r2-i386
     driver:
       image_id: ami-6f64f00f
-      instance_type: c5d.xlarge
+      instance_type: m5.2xlarge
       subnet_id: subnet-03704c5b3ef73a96a
     transport:
       name: winrm
