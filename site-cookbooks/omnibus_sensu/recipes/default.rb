@@ -9,19 +9,19 @@ include_recipe 'chef-sugar'
 if windows?
   include_recipe 'chocolatey'
 
-  chocolatey 'dotnet3.5' do
+  chocolatey_package 'dotnet3.5' do
     version '3.5.20160716'
   end
 
-  chocolatey 'windows-sdk-8.1' do
+  chocolatey_package 'windows-sdk-8.1' do
     version '8.100.26654.0'
   end
 
-  chocolatey 'microsoft-build-tools' do
+  chocolatey_package 'microsoft-build-tools' do
     version '14.0.25420.1'
   end
 
-  chocolatey 'awscli' do
+  chocolatey_package 'awscli' do
     version '1.11.41'
   end
 
