@@ -11,7 +11,7 @@ depends 'omnibus', '~> 5.0'
 depends 'git', '~> 5.0'
 depends 'freebsd', '~> 1.0'
 depends 'chef-sugar', '~> 3.4'
-depends 'chocolatey', '~> 1.0'
+depends 'chocolatey', '~> 2.0'
 
 # If you upload to Supermarket you should set this so your cookbook
 # gets a `View Issues` link
