@@ -23,7 +23,8 @@ end
 driver:
   name: ec2
   instance_type: m3.medium
-  retryable_tries: 120
+  retryable_tries: 100
+  retryable_sleep: 10
   <% if ENV['AWS_IAM_PROFILE_NAME'] %>
   iam_profile_name: <% ENV['AWS_IAM_PROFILE_NAME'] %>
   <% end %>
@@ -154,8 +155,9 @@ platforms:
   - name: windows-2012-r2
     driver:
       image_id: ami-6f64f00f
-      instance_type: m5.2xlarge
+      instance_type: m5.xlarge
       subnet_id: subnet-03704c5b3ef73a96a
+      associate_public_ip: true
     transport:
       name: winrm
       elevated: true
@@ -163,8 +165,9 @@ platforms:
   - name: windows-2012-r2-i386
     driver:
       image_id: ami-6f64f00f
-      instance_type: m5.2xlarge
+      instance_type: m5.xlarge
       subnet_id: subnet-03704c5b3ef73a96a
+      associate_public_ip: true
     transport:
       name: winrm
       elevated: true
