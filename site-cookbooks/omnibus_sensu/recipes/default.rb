@@ -11,18 +11,22 @@ if windows?
 
   chocolatey_package 'dotnet3.5' do
     version '3.5.20160716'
+    retries 3
   end
 
   chocolatey_package 'windows-sdk-8.1' do
     version '8.100.26654.0'
+    retries 3
   end
 
   chocolatey_package 'microsoft-build-tools' do
     version '14.0.25420.1'
+    retries 3
   end
 
   chocolatey_package 'awscli' do
     version '1.11.41'
+    retries 3
   end
 
   # If this is an ephemeral vagrant/test-kitchen instance, we relax the password
