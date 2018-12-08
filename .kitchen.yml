@@ -156,7 +156,7 @@ platforms:
     driver:
       image_id: ami-6f64f00f
       instance_type: m5.xlarge
-      subnet_id: subnet-03704c5b3ef73a96a
+      subnet_id: subnet-008c24cc2687f8b3b
       associate_public_ip: true
     transport:
       name: winrm
@@ -166,7 +166,7 @@ platforms:
     driver:
       image_id: ami-6f64f00f
       instance_type: m5.xlarge
-      subnet_id: subnet-03704c5b3ef73a96a
+      subnet_id: subnet-008c24cc2687f8b3b
       associate_public_ip: true
     transport:
       name: winrm
