@@ -68,12 +68,8 @@ include_recipe "omnibus::default"
 
 case node["platform_family"]
 when "rhel"
-  log 'message' do
-    message 'RHEL signing key nil?: #{node["omnibus_sensu"]["gpg_passphrase"].nil?}'
-    level :info
-  end
   # skip signing on Centos 5 because of Reasons
-  if (not node["omnibus_sensu"]["gpg_passphrase"].nil?) && Gem::Version.new(node["platform_version"]) >= Gem::Version.new(6)
+  if Gem::Version.new(node["platform_version"]) >= Gem::Version.new(6)
     package "gpg"
     package "pygpgme"
 
