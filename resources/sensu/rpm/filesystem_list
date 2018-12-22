@@ -6,6 +6,7 @@
 /boot
 /dev
 /etc
+/etc/default
 /etc/logrotate.d
 /etc/opt
 /etc/pki
