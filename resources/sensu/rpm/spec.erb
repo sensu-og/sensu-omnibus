@@ -66,5 +66,16 @@ Obsoletes: <%= name %>
 <% end -%>
 <% # List all files -%>
 <% files.each do |file| -%>
-<%= file %>
+  <% case file 
+    when "%dir /etc/sensu" %>
+    <%= '%dir %attr(0755, root, root) /etc/sensu' %>
+    <% when "%dir /var/cache/sensu" %>
+    <%= '%dir %attr(0755, root, root) /var/cache/sensu' %>
+    <% when "%dir /var/run/sensu" %>
+    <%= '%dir %attr(0750, root, root) /var/run/sensu' %>
+    <% when "%dir /var/log/sensu" %>
+    <%= '%dir %attr(0750, root, root) /var/log/sensu' %>
+    <% else %>
+    <%= file %>
+  <% end %>
 <% end -%>
