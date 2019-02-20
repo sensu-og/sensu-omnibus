@@ -7,6 +7,7 @@ gem 'omnibus', :git => 'https://github.com/sensu/omnibus.git', :branch => 'sensu
 gem 'ffi-yajl', '2.3.0'
 gem 'artifactory', '2.5.1'
 gem 'license_scout', '0.1.3'
+gem 'mixlib-cli', '1.7.0'
 
 # This development group is installed by default when you run `bundle install`,
 # but if you are using Omnibus in a CI-based infrastructure, you do not need
