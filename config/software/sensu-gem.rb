@@ -36,11 +36,11 @@ build do
       " -- #{gem_install_extras}", env: env
 
   gem "install sensu-plugin" \
-      " --version '1.4.5'" \
+      " --version '1.4.7'" \
       " --no-ri --no-rdoc", env: env
 
   gem "install sensu-plugin" \
-      " --version '2.0.1'" \
+      " --version '2.0.2'" \
       " --no-ri --no-rdoc", env: env
 
   gem "install sensu-translator" \
