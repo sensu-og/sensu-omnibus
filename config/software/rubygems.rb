@@ -79,7 +79,10 @@ end
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  FileUtils.rm_f "C:/opt/sensu/embedded/bin/rake.bat"
+  # remove rake.bat if it already exists
+  if windows?
+    FileUtils.rm_f "C:/opt/sensu/embedded/bin/rake.bat"
+  end
 
   if source
     # Building from source:
