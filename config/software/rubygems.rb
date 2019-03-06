@@ -79,6 +79,8 @@ end
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
+  FileUtils.rm_f "C:/opt/sensu/embedded/bin/rake.bat"
+
   if source
     # Building from source:
     ruby "setup.rb --no-ri --no-rdoc", env: env
