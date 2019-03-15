@@ -156,4 +156,22 @@ Vagrant.configure("2") do |config|
    SHELL
   end
 
+  config.vm.define "windows", default: true, autostart: false do |centos|
+    centos.vm.box = "tas50/windows_2019"
+    centos.vm.hostname = "windows"
+
+    #centos.vm.network "public_network"
+    centos.vm.synced_folder ".", "C:/vagrant"
+    # Support virtualbox provider
+    centos.vm.provider "virtualbox" do |vb, vboxoverride|
+      vb.cpus = 2
+      vb.memory = 2048
+      vb.name = "sensu-omnibus-windows-x86-64"
+    end
+
+    # Enable provisioning with a shell script. Additional provisioners such as
+    # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+    # documentation for more information about their specific syntax and use.
+    centos.vm.provision "shell", path: "provision.ps1"
+  end
 end

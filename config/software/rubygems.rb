@@ -79,13 +79,11 @@ end
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # remove rake.bat if it already exists
-  if windows?
-    FileUtils.rm_f "C:/opt/sensu/embedded/bin/rake.bat"
-  end
-
   if source
     # Building from source:
+    block do
+      File.delete("C:/opt/sensu/embedded/bin/rake.bat")
+    end
     ruby "setup.rb --no-ri --no-rdoc", env: env
   else
     # Installing direct from rubygems:
