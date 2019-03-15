@@ -81,6 +81,12 @@ build do
 
   if source
     # Building from source:
+    # Delete rake.bat before running setup on windows to avoid a permissions issue
+    if windows?
+      block do
+        File.delete("C:/opt/sensu/embedded/bin/rake.bat")
+      end
+    end
     ruby "setup.rb --no-ri --no-rdoc", env: env
   else
     # Installing direct from rubygems:
