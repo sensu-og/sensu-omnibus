@@ -105,21 +105,6 @@ platforms:
         - device_name: /dev/xvda
           ebs:
             delete_on_termination: true
-  - name: debian-7
-    run_list: apt::default
-    driver:
-      block_device_mappings:
-        - device_name: /dev/xvda
-          ebs:
-            delete_on_termination: true
-  - name: debian-7-i386
-    driver:
-      instance_type: c1.medium
-      block_device_mappings:
-        - device_name: /dev/sda
-          ebs:
-            delete_on_termination: true
-    run_list: apt::default
   - name: freebsd-11
     driver:
       user_data: "user-data/freebsd.sh"
