@@ -110,7 +110,6 @@ platforms:
       user_data: "user-data/freebsd.sh"
     run_list:
       - omnibus_sensu::freebsd_portsnap
-      - freebsd::pkgng
   - name: freebsd-10
     driver:
       user_data: "user-data/freebsd.sh"
