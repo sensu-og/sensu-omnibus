@@ -9,6 +9,7 @@ gem 'artifactory', '2.5.1'
 gem 'license_scout', '0.1.3'
 gem 'mixlib-cli', '1.7.0'
 gem 'mixlib-authentication', '2.1.1'
+gem 'rubyzip', '1.3.0'
 
 # This development group is installed by default when you run `bundle install`,
 # but if you are using Omnibus in a CI-based infrastructure, you do not need
