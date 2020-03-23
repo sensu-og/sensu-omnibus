@@ -3,6 +3,7 @@
 .kitchen/
 .kitchen.local.yml
 vendor/bundle
+vendor/cache
 pkg/*
 .vagrant
 bin/*

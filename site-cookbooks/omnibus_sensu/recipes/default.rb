@@ -135,8 +135,6 @@ when 'archive'
     action :create
   end
 
-  chef_gem 'rubyzip'
-
   ruby_block 'expand_archive' do
     block do
       require 'zip'
@@ -152,14 +150,15 @@ when 'archive'
     end
   end
 else
-  git project_dir do
-    repository 'https://github.com/sensu/sensu-omnibus.git'
-    revision rev
-    environment ({"PATH" => '/opt/omnibus-toolchain/bin:/opt/omnibus-toolchain/embedded/bin:/usr/local/bin:$PATH'}) unless windows?
-    user node["omnibus"]["build_user"] unless windows?
-    group node["omnibus"]["build_user_group"] unless windows?
-    action :sync
-  end
+  # NOTE: Sync pwd to /opt/sensu-omnibus through Vagrant instead.
+  # git project_dir do
+  #   repository 'https://github.com/sensu/sensu-omnibus.git'
+  #   revision rev
+  #   environment ({"PATH" => '/opt/omnibus-toolchain/bin:/opt/omnibus-toolchain/embedded/bin:/usr/local/bin:$PATH'}) unless windows?
+  #   user node["omnibus"]["build_user"] unless windows?
+  #   group node["omnibus"]["build_user_group"] unless windows?
+  #   action :sync
+  # end
 end
 
 template ::File.join(node["omnibus_sensu"]["project_dir"], "omnibus.rb") do
@@ -193,21 +192,21 @@ load_toolchain_cmd = case windows?
                        ".  #{::File.join(build_user_home, 'load-omnibus-toolchain.sh')}"
                      end
 
-execute "populate_omnibus_cache_s3" do
-  command(
-    <<-CODE.gsub(/^ {10}/, '')
-          #{load_toolchain_cmd} && \
-          bundle install && \
-          bundle exec omnibus cache missing && \
-          bundle exec omnibus cache populate && \
-          bundle exec omnibus cache missing
-       CODE
-    )
-  cwd node["omnibus_sensu"]["project_dir"]
-  user "root" unless windows?
-  environment shared_env
-  not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
-end
+# execute "populate_omnibus_cache_s3" do
+#   command(
+#     <<-CODE.gsub(/^ {10}/, '')
+#           #{load_toolchain_cmd} && \
+#           bundle install && \
+#           bundle exec omnibus cache missing && \
+#           bundle exec omnibus cache populate && \
+#           bundle exec omnibus cache missing
+#        CODE
+#     )
+#   cwd node["omnibus_sensu"]["project_dir"]
+#   user "root" unless windows?
+#   environment shared_env
+#   not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
+# end
 
 debian_9_or_greater = node["platform"] == "debian" && Gem::Version.new(node["platform_version"]) >= Gem::Version.new(9)
 ubuntu_1804_or_greater = node["platform"] == "ubuntu" && Gem::Version.new(node["platform_version"]) >= Gem::Version.new("18.04")
