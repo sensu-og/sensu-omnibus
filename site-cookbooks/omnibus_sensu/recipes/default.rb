@@ -66,38 +66,38 @@ end
 
 include_recipe "omnibus::default"
 
-case node["platform_family"]
-when "rhel"
-  # skip signing on Centos 5 because of Reasons
-  if Gem::Version.new(node["platform_version"]) >= Gem::Version.new(6)
-    package "gpg"
-    package "pygpgme"
+# case node["platform_family"]
+# when "rhel"
+#   # skip signing on Centos 5 because of Reasons
+#   if Gem::Version.new(node["platform_version"]) >= Gem::Version.new(6)
+#     package "gpg"
+#     package "pygpgme"
 
-    file ::File.join(build_user_home, '.gpg_passphrase') do
-      owner node["omnibus"]["build_user"]
-      mode 0600
-      content node["omnibus_sensu"]["gpg_passphrase"]
-      sensitive true
-    end
+#     file ::File.join(build_user_home, '.gpg_passphrase') do
+#       owner node["omnibus"]["build_user"]
+#       mode 0600
+#       content node["omnibus_sensu"]["gpg_passphrase"]
+#       sensitive true
+#     end
 
-    gnupg_tar_path = ::File.join(build_user_home, 'gnupg.tar')
+#     gnupg_tar_path = ::File.join(build_user_home, 'gnupg.tar')
 
-    aws_s3_file gnupg_tar_path do
-      bucket node["omnibus_sensu"]["publishers"]["s3"]["cache_bucket"]
-      remote_path 'gpg/gnupg.tar'
-      aws_access_key node["omnibus_sensu"]["publishers"]["s3"]["access_key_id"]
-      aws_secret_access_key  node["omnibus_sensu"]["publishers"]["s3"]["secret_access_key"]
-      region node["omnibus_sensu"]["publishers"]["s3"]["region"]
-      owner node["omnibus"]["build_user"]
-      group node["omnibus"]["build_user_group"]
-    end
+#     aws_s3_file gnupg_tar_path do
+#       bucket node["omnibus_sensu"]["publishers"]["s3"]["cache_bucket"]
+#       remote_path 'gpg/gnupg.tar'
+#       aws_access_key node["omnibus_sensu"]["publishers"]["s3"]["access_key_id"]
+#       aws_secret_access_key  node["omnibus_sensu"]["publishers"]["s3"]["secret_access_key"]
+#       region node["omnibus_sensu"]["publishers"]["s3"]["region"]
+#       owner node["omnibus"]["build_user"]
+#       group node["omnibus"]["build_user_group"]
+#     end
 
-    execute 'unpack-gpg-tarball' do
-      command "tar -xvf #{gnupg_tar_path}"
-      cwd '/root'
-    end
-  end
-end
+#     execute 'unpack-gpg-tarball' do
+#       command "tar -xvf #{gnupg_tar_path}"
+#       cwd '/root'
+#     end
+#   end
+# end
 
 gem_package "ffi-yajl" do
   if windows?
@@ -149,17 +149,18 @@ when 'archive'
       end
     end
   end
-else
-  # NOTE: Sync pwd to /opt/sensu-omnibus through Vagrant instead.
-  # git project_dir do
-  #   repository 'https://github.com/sensu/sensu-omnibus.git'
-  #   revision rev
-  #   environment ({"PATH" => '/opt/omnibus-toolchain/bin:/opt/omnibus-toolchain/embedded/bin:/usr/local/bin:$PATH'}) unless windows?
-  #   user node["omnibus"]["build_user"] unless windows?
-  #   group node["omnibus"]["build_user_group"] unless windows?
-  #   action :sync
-  # end
 end
+# else
+#   NOTE: Sync pwd to /opt/sensu-omnibus through Vagrant instead.
+#   git project_dir do
+#     repository 'https://github.com/sensu/sensu-omnibus.git'
+#     revision rev
+#     environment ({"PATH" => '/opt/omnibus-toolchain/bin:/opt/omnibus-toolchain/embedded/bin:/usr/local/bin:$PATH'}) unless windows?
+#     user node["omnibus"]["build_user"] unless windows?
+#     group node["omnibus"]["build_user_group"] unless windows?
+#     action :sync
+#   end
+# end
 
 template ::File.join(node["omnibus_sensu"]["project_dir"], "omnibus.rb") do
   source "omnibus.rb.erb"
@@ -244,48 +245,48 @@ pkg_suffix_map = {
 
 artifact_id = [ node["omnibus_sensu"]["build_version"], node["omnibus_sensu"]["build_iteration"] ].join("-")
 
-publish_environment = case windows?
-                      when true
-                        shared_env.merge({
-                            'AWS_REGION' => node["omnibus_sensu"]["publishers"]["s3"]["region"],
-                            'AWS_ACCESS_KEY_ID' => node["omnibus_sensu"]["publishers"]["s3"]["access_key_id"],
-                            'AWS_SECRET_ACCESS_KEY' => node["omnibus_sensu"]["publishers"]["s3"]["secret_access_key"]
-                        })
-                      when false
-                        shared_env.merge({
-                        'USER' => node["omnibus"]["build_user"],
-                        'USERNAME' => node["omnibus"]["build_user"],
-                        'LOGNAME' => node["omnibus"]["build_user"]
-                        })
-                      end
+# publish_environment = case windows?
+#                       when true
+#                         shared_env.merge({
+#                             'AWS_REGION' => node["omnibus_sensu"]["publishers"]["s3"]["region"],
+#                             'AWS_ACCESS_KEY_ID' => node["omnibus_sensu"]["publishers"]["s3"]["access_key_id"],
+#                             'AWS_SECRET_ACCESS_KEY' => node["omnibus_sensu"]["publishers"]["s3"]["secret_access_key"]
+#                         })
+#                       when false
+#                         shared_env.merge({
+#                         'USER' => node["omnibus"]["build_user"],
+#                         'USERNAME' => node["omnibus"]["build_user"],
+#                         'LOGNAME' => node["omnibus"]["build_user"]
+#                         })
+#                       end
 
-case windows?
-when true
-  arch = windows_arch_i386? ? "i386" : "x86_64"
-  win_arch = windows_arch_i386? ? "x86" : "x64"
-  win_version = node["omnibus_sensu"]["windows_target_version"]
-  msi_name = "sensu-#{artifact_id}-#{win_arch}.msi"
-  aws_cli = File.join('C:\"Program Files"\Amazon\AWSCLI\aws')
+# case windows?
+# when true
+#   arch = windows_arch_i386? ? "i386" : "x86_64"
+#   win_arch = windows_arch_i386? ? "x86" : "x64"
+#   win_version = node["omnibus_sensu"]["windows_target_version"]
+#   msi_name = "sensu-#{artifact_id}-#{win_arch}.msi"
+#   aws_cli = File.join('C:\"Program Files"\Amazon\AWSCLI\aws')
 
-  [ msi_name, "#{msi_name}.metadata.json" ].each do |pkg_file|
-    execute "publish_sensu_#{pkg_file}_s3_windows" do
-      command "#{aws_cli} s3 cp pkg\\#{pkg_file} s3://#{node["omnibus_sensu"]["publishers"]["s3"]["artifact_bucket"]}/windows/#{win_version}/#{arch}/#{msi_name}/#{pkg_file}"
-      cwd node["omnibus_sensu"]["project_dir"]
-      environment publish_environment
-      not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
-    end
-  end
-else
-  execute "publish_sensu_#{artifact_id}_s3" do
-    command(
-      <<-CODE.gsub(/^ {10}/, '')
-            #{load_toolchain_cmd}
-            bundle exec omnibus publish s3 #{node["omnibus_sensu"]["publishers"]["s3"]["artifact_bucket"]} "pkg/sensu*.#{value_for_platform(pkg_suffix_map)}"
-          CODE
-    )
-    cwd node["omnibus_sensu"]["project_dir"]
-    user node["omnibus"]["build_user"] unless windows?
-    environment publish_environment
-    not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
-  end
-end
+#   [ msi_name, "#{msi_name}.metadata.json" ].each do |pkg_file|
+#     execute "publish_sensu_#{pkg_file}_s3_windows" do
+#       command "#{aws_cli} s3 cp pkg\\#{pkg_file} s3://#{node["omnibus_sensu"]["publishers"]["s3"]["artifact_bucket"]}/windows/#{win_version}/#{arch}/#{msi_name}/#{pkg_file}"
+#       cwd node["omnibus_sensu"]["project_dir"]
+#       environment publish_environment
+#       not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
+#     end
+#   end
+# else
+#   execute "publish_sensu_#{artifact_id}_s3" do
+#     command(
+#       <<-CODE.gsub(/^ {10}/, '')
+#             #{load_toolchain_cmd}
+#             bundle exec omnibus publish s3 #{node["omnibus_sensu"]["publishers"]["s3"]["artifact_bucket"]} "pkg/sensu*.#{value_for_platform(pkg_suffix_map)}"
+#           CODE
+#     )
+#     cwd node["omnibus_sensu"]["project_dir"]
+#     user node["omnibus"]["build_user"] unless windows?
+#     environment publish_environment
+#     not_if { node["omnibus_sensu"]["publishers"]["s3"].any? {|k,v| v.nil? } }
+#   end
+# end

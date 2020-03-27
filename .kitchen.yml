@@ -74,10 +74,8 @@ provisioner:
         <% end %>
 
 platforms:
-  # - name: centos-7
-  #   driver:
-  #     image_id: ami-a042f4d8
-  #   run_list: yum-epel::default
+  - name: centos-7
+    run_list: yum-epel::default
   # - name: centos-7-i386
   #   run_list: yum-epel::default
   # - name: centos-6
