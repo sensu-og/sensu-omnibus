@@ -32,3 +32,5 @@ end
 group :ec2 do
   gem 'kitchen-ec2',             '~> 2.0'
 end
+
+gem 'rubyzip', '< 2.0.0'
